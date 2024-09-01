@@ -14,11 +14,11 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), glob('launch/*.py')),
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
-        (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
         (os.path.join('share', package_name, 'meshes'), glob('meshes/*')),
         (os.path.join('share', package_name, 'rviz'), glob('rviz/*')),
         (os.path.join('share', package_name, 'params'), glob('params/*')),
-        (os.path.join('share', package_name, 'maps'), glob('maps/*'))
+        (os.path.join('share', package_name, 'maps'), glob('maps/*')),
+        (os.path.join('share', package_name, 'config'), glob('config/*'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
