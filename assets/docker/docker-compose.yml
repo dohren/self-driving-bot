@@ -1,14 +1,14 @@
 version: '3'
 services:
   ros_container:
-    image: ros:humble
+    image: ros:jazzy
     network_mode: "host"
     devices:
       - /dev/ttyUSB0
     restart: unless-stopped
     volumes:
-      - /home/andi/ros2_workspace:/root/ros_ws
-    command: bash -c "source /root/ros_ws/install/setup.bash && ros2 launch ldlidar_stl_ros2 ld19.launch.py"
+      - /home/andi/ros2_workspace:/root/ros2_workspace
+    command: bash -c "source /root/ros2_workspace/install/setup.bash && ros2 launch ldlidar_stl_ros2 ld19.launch.py"
       - /dev:/dev
   micro_ros_agent:
     image: microros/micro-ros-agent:jazzy
