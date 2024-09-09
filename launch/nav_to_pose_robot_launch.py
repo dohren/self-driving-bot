@@ -56,7 +56,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(nav2_bringup_dir, 'launch', 'bringup_launch.py')
         ),
-        launch_arguments={'map': map_yaml_file}.items(),
+        launch_arguments={'map': map_yaml_file, 'use_sim_time': 'false'}.items(),
     )
 
     start_odometry_publisher_cmd = Node(package='self_driving_bot' ,
@@ -72,11 +72,21 @@ def generate_launch_description():
     )
 
 
+    # Static transform publisher
+    static_transform_publisher_cmd = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_transform_publisher',
+        arguments=['0', '0', '0', '0', '0', '0', '1', 'map', 'odom']
+    )
+
+
     ld = LaunchDescription()
-    ld.add_action(start_odometry_publisher_cmd )
+    
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(rviz_cmd)
-
     ld.add_action(bringup_cmd)
-    ld.add_action(slam_toolbox_node)
+    ld.add_action(start_odometry_publisher_cmd)
+    ld.add_action(static_transform_publisher_cmd)
+    # ld.add_action(slam_toolbox_node)
     return ld

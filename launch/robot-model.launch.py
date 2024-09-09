@@ -119,7 +119,8 @@ def generate_launch_description():
     declare_robot_sdf_cmd = DeclareLaunchArgument(
         'robot_sdf',
         # default_value=os.path.join(desc_dir, 'urdf', 'standard', 'turtlebot4.urdf.xacro'),
-        default_value=os.path.join(self_driving_dir, 'urdf', 'ikea_table.urdf'),
+        # default_value=os.path.join(self_driving_dir, 'urdf', 'ikea_table.urdf'),
+        default_value=os.path.join(self_driving_dir, 'urdf', 'box_robot.urdf'),
         description='Full path to robot sdf file to spawn the robot in gazebo',
     )
 

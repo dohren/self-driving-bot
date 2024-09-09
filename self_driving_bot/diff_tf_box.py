@@ -75,7 +75,7 @@ class DiffTf(Node):
         self.create_timer(1.0/self.rate_hz, self.update)  
 
         self.ticks_meter = float(
-            self.declare_parameter('ticks_meter', 7800).value)  # The number of wheel encoder ticks per meter of travel
+            self.declare_parameter('ticks_meter', 6200).value)  # The number of wheel encoder ticks per meter of travel +7800
         self.base_width = float(self.declare_parameter('base_width', 0.24).value)  # The wheel base width in meters
 
         self.base_frame_id = self.declare_parameter('base_frame_id',
@@ -84,7 +84,7 @@ class DiffTf(Node):
         self.odom_frame_id = self.declare_parameter('odom_frame_id',
                                                     'odom').value  # the name of the odometry reference frame
 
-        self.encoder_min = self.declare_parameter('encoder_min', -32768).value
+        self.encoder_min = self.declare_parameter('encoder_min', -32768).value 
         self.encoder_max = self.declare_parameter('encoder_max', 32768).value
         self.encoder_low_wrap = self.declare_parameter('wheel_low_wrap', (
                 self.encoder_max - self.encoder_min) * 0.3 + self.encoder_min).value
