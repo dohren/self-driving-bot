@@ -1,6 +1,26 @@
 <?xml version="1.0"?>
 <robot name="my_robot">
 
+  <!-- Add a base footprint definition -->
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_footprint"/>
+    <origin rpy="0 0 0" xyz="0 0 0.0"/>
+  </joint>
+  <link name="base_footprint">
+    <inertial>
+      <mass value="0.0001"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+
   <!-- Base of the robot -->
   <link name="base_link">
     <visual>
@@ -143,7 +163,7 @@
   </link>
 
   <!-- LiDAR (Zylinder) -->
-  <link name="lidar_sensor">
+  <link name="base_laser">
     <visual>
       <origin xyz="0 0 0.025" rpy="0 0 0"/> 
       <geometry>
@@ -173,9 +193,9 @@
     <origin xyz="0 0 0.04" rpy="0 0 0"/> <!-- In der Mitte der Box -->
   </joint>
 
-  <joint name="lidar_sensor_joint" type="fixed">
+  <joint name="base_laser_joint" type="fixed">
     <parent link="lidar_mount"/>
-    <child link="lidar_sensor"/>
+    <child link="base_laser"/>
     <origin xyz="0 0 0.14" rpy="0 0 0"/> <!-- Der Zylinder auf dem Würfel -->
   </joint>
 
@@ -265,5 +285,43 @@
   <gazebo reference="front_ball_joint">
     <preserveFixedJoint>true</preserveFixedJoint>
   </gazebo>
+
+  <!-- Transmissions for ros2_control -->
+  <transmission name="left_wheel_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_wheel_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_wheel_motor">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </actuator>
+  </transmission>
+
+  <transmission name="right_wheel_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_wheel_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_wheel_motor">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </actuator>
+  </transmission>
+
+    <!-- ros2_control Block -->
+  <ros2_control name="MyRobotHardware" type="system">
+    <hardware>
+      <plugin>mock_components/GenericSystem</plugin>  <!-- Falls du eine Simulation machst -->
+      <param name="joints">
+        <joint name="left_wheel_joint">
+          <command_interface name="velocity"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="right_wheel_joint">
+          <command_interface name="velocity"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </param>
+    </hardware>
+  </ros2_control>
 
 </robot>

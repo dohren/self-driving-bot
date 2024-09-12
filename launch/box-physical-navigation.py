@@ -158,6 +158,13 @@ def generate_launch_description():
                     )
 
 
+    static_transform_publisher_cmd = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_transform_publisher',
+        arguments=['0', '0', '0', '0', '0', '0', '1', 'map', 'odom']
+    )
+
     # Create the launch description and populate
     ld = LaunchDescription()
 
