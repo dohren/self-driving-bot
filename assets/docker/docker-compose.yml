@@ -3,8 +3,7 @@ services:
   ros_container:
     image: ros:jazzy
     network_mode: "host"
-    devices:
-      - /dev/ttyUSB0
+    privileged: true
     restart: unless-stopped
     volumes:
       - /home/andi/ros2_workspace:/root/ros2_workspace
@@ -17,6 +16,4 @@ services:
     privileged: true
     restart: unless-stopped
     network_mode: "host"
-    volumes:
-      - /dev:/dev
     command: serial --dev /dev/ttyUSB1 -v6
