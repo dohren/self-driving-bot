@@ -41,8 +41,6 @@ const int turn_interval = 50; // Adjust this value to control the turn interval 
 
 float global_left_speed = 0;
 float global_right_speed = 0;
-float global_interval = 0;
-unsigned long previousMillis = -5000; 
 
 ESP32Encoder encoder_left;
 ESP32Encoder encoder_right;
@@ -126,13 +124,13 @@ void subscription_callback_simple(const void *msgin) {
   // Check the type of movement based on the angular velocity
   if (angular_velocity > 0.1) {
     // Robot is turning right
-    left_speed = -200;  
-    right_speed = 200;
+    left_speed = -100;  
+    right_speed = 100;
     interval = angular_velocity * 100;         
   } else if (angular_velocity < -0.1) {
     // Robot is turning left 
-    left_speed = 200;
-    right_speed = -200;               
+    left_speed = 100;
+    right_speed = -100;               
     interval = -angular_velocity * 100;
   } else if (linear_velocity > 0.1) {
     // Robot is moving forward
@@ -146,8 +144,6 @@ void subscription_callback_simple(const void *msgin) {
 
   global_left_speed = left_speed;
   global_right_speed = right_speed;
-  global_interval = interval;
-
 }
 
 
@@ -158,7 +154,7 @@ void setup() {
 
   //ESP32Encoder::useInternalWeakPullResistors=DOWN;
   // Enable the weak pull up resistors
-  ESP32Encoder::useInternalWeakPullResistors=UP;
+  ESP32Encoder::useInternalWeakPullResistors = puType::up;
 
   // use pin 19 and 18 for the first encoder
   encoder_left.attachHalfQuad(35, 34);
@@ -262,15 +258,8 @@ void loop() {
     case AGENT_CONNECTED:
       EXECUTE_EVERY_N_MS(200, state = (RMW_RET_OK == rmw_uros_ping_agent(100, 1)) ? AGENT_CONNECTED : AGENT_DISCONNECTED);
       if (state == AGENT_CONNECTED) {
-        if (millis() - previousMillis > 400 ) {
-              move_rover(global_left_speed, global_right_speed);
-          
-              if (global_interval > 0 ){ 
-                previousMillis = millis();
-                delay(global_interval);
-                move_rover(0, 0);
-              }
-          }
+          move_rover(global_left_speed, global_right_speed);
+
           rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
           rclc_executor_spin_some(&executor_publisher, RCL_MS_TO_NS(100));
       }
