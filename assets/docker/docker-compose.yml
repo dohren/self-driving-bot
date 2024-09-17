@@ -7,13 +7,13 @@ services:
     restart: unless-stopped
     volumes:
       - /home/andi/ros2_workspace:/root/ros2_workspace
-    command: bash -c "source /root/ros2_workspace/install/setup.bash && ros2 launch ldlidar_stl_ros2 ld19.launch.py"
       - /dev:/dev
-  micro_ros_agent:
-    image: microros/micro-ros-agent:jazzy
-    devices:
-      - /dev/ttyUSB1
-    privileged: true
-    restart: unless-stopped
-    network_mode: "host"
-    command: serial --dev /dev/ttyUSB1 -v6
+    command: bash -c "source /root/ros2_workspace/install/setup.bash && ros2 launch ldlidar_stl_ros2 ld19.launch.py"
+#  micro_ros_agent:
+#    image: microros/micro-ros-agent:jazzy
+#    devices:
+#      - /dev/ttyUSB1
+#    privileged: true
+#    restart: unless-stopped
+#    network_mode: "host"
+#    command: serial --dev /dev/ttyUSB1 -v6
