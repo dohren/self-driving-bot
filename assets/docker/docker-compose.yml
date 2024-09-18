@@ -11,9 +11,10 @@ services:
     command: bash -c "source /root/ros2_workspace/install/setup.bash && ros2 launch ldlidar_stl_ros2 ld19.launch.py"
 #  micro_ros_agent:
 #    image: microros/micro-ros-agent:jazzy
-#    devices:
-#      - /dev/ttyUSB1
+#    volumes:
+#      - /dev:/dev
 #    privileged: true
 #    restart: unless-stopped
 #    network_mode: "host"
 #    command: serial --dev /dev/ttyUSB1 -v6
+

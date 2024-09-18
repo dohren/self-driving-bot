@@ -77,14 +77,6 @@ def generate_launch_description():
             }]
         )
 
-    # Node für die Anfangsposition (z.B. static_transform_publisher)
-    initial_pose_node = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='initial_pose_publisher',
-        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '1.0', 'map', 'odom']  # Anpassen!
-    )
-
 
     ld = LaunchDescription()
     
@@ -93,6 +85,4 @@ def generate_launch_description():
     ld.add_action(bringup_cmd)
     ld.add_action(start_odometry_publisher_cmd)
     ld.add_action(robot_state_publisher_node)
-    ld.add_action(initial_pose_node)
-    #ld.add_action(static_transform_publisher_cmd)
     return ld
