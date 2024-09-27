@@ -37,13 +37,6 @@ def generate_launch_description():
     map_yaml_file = os.path.join(nav2_bringup_dir, 'maps', 'depot.yaml')
     diff_drive_config = os.path.join(self_driving_dir, 'config', 'diff_drive_box.yaml')
 
-    config_file = os.path.join(
-        get_package_share_directory('self_driving_bot'),
-        'config',
-        'diff_drive_box.yaml'  # Passe dies an den Namen deiner YAML-Datei an
-    )
-
-
     # Launch configuration variables
     use_rviz = LaunchConfiguration('use_rviz')
 
@@ -66,62 +59,30 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(nav2_bringup_dir, 'launch', 'bringup_launch.py')
         ),
-        launch_arguments={'map': map_yaml_file, 'use_sim_time': 'false'}.items(),
+        launch_arguments={'map': map_yaml_file, 'use_sim_time': 'false', 'robot_description': urdf_file }.items(),
     )
 
     start_odometry_publisher_cmd = Node(package='self_driving_bot' ,
-                    executable='diff_tf',
+                    executable='diff_tf_box',
                     name='diff_tf',
                     )
-  
-    controller_manager_cmd = Node(
-        package='controller_manager',
-        executable='ros2_control_node',
-        parameters=[config_file],  # Konfigurationsdatei für den Controller
-        output='screen'
-    )
-
-    diff_drive_controller = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['diff_base_controller'],
-        parameters=[diff_drive_config, {'robot_description': Command(['xacro', ' ', urdf_file])}],
-        output='screen'
-    )
 
 
-    start_robot_state_publisher_cmd = Node(
+    robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        name='robot_state_publisher',
+        name='robot_state_publisher',  
         output='screen',
-        parameters=[{'robot_description': Command(['xacro', ' ', urdf_file])}]
-    )
+        parameters=[{ 'robot_description': Command('xacro ' + urdf_file)
+            }]
+        )
 
-    # Static transform publisher
-    static_transform_publisher_cmd = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='static_transform_publisher',
-        arguments=['0', '0', '0', '0', '0', '0', '1', 'map', 'odom']
-    )
-
-    static_transform_publisher_cmd_2 = Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='static_transform_publisher',
-            arguments=['0', '0', '0', '0', '0', '0', '1', 'odom', 'base_link']
-    )
 
     ld = LaunchDescription()
     
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(rviz_cmd)
     ld.add_action(bringup_cmd)
-    # ld.add_action(start_odometry_publisher_cmd)
-    ld.add_action(static_transform_publisher_cmd)
-    #ld.add_action(static_transform_publisher_cmd_2)#
-    ld.add_action(controller_manager_cmd)
-    ld.add_action(start_robot_state_publisher_cmd)
-    ld.add_action(diff_drive_controller)
+    ld.add_action(start_odometry_publisher_cmd)
+    ld.add_action(robot_state_publisher_node)
     return ld
