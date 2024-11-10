@@ -153,7 +153,7 @@ void setup() {
   set_microros_transports();
 
   //ESP32Encoder::useInternalWeakPullResistors=DOWN;
-  // Enable the weak pull up resistors
+  // Enable the weak pull up resistors/home/andi/project/ZYC0024/ZYC0024-CN-With antenna/2_Arduino_Code-代码文件/ESP32CAM_Car/ESP32CAM_Car.ino
   ESP32Encoder::useInternalWeakPullResistors = puType::up;
 
   // use pin 19 and 18 for the first encoder
